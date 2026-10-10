@@ -31,7 +31,7 @@ export function schedule(
         loan.amount > 1e8 ||
         !Number.isInteger(loan.years) ||
         loan.years < 1 ||
-        loan.years > 100 ||
+        loan.years > 30 ||
         !Number.isFinite(loan.rate) ||
         loan.rate < 0 ||
         loan.rate > 100

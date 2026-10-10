@@ -25,7 +25,7 @@ function App() {
 		amount:
 			!Number.isFinite(loan.amount) || loan.amount < 0.01 || loan.amount > 1e8,
 		years:
-			!Number.isInteger(loan.years) || loan.years < 1 || loan.years > 100,
+			!Number.isInteger(loan.years) || loan.years < 1 || loan.years > 30,
 		rate: !Number.isFinite(loan.rate) || loan.rate < 0 || loan.rate > 100,
 	};
 
@@ -126,7 +126,7 @@ function App() {
 							</div>
 							{errors.years && (
 								<small className="error-text">
-									Podaj pełne lata: od 1 do 100.
+									Podaj pełne lata: od 1 do 30.
 								</small>
 							)}
 						</label>
