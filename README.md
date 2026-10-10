@@ -4,6 +4,10 @@ A React + TypeScript + Vite application for simulating a mortgage repayment sche
 
 The calculator interface on the frontend is presented in Polish, so labels, helper text, and messages are localized for Polish-speaking users.
 
+## Screenshot
+
+![Application screenshot](screenshot.png)
+
 ## Local Setup
 
 Requirements: Node.js 22.18 or newer, and npm.
