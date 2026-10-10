@@ -7,6 +7,24 @@ const money = (cents: number) =>
 		cents / 100,
 	);
 
+const sanitizeDigits = (value: string, maxLength: number) =>
+	value.replace(/\D/g, '').slice(0, maxLength);
+
+const sanitizeRate = (value: string, maxLength: number) => {
+	const cleaned = value.replace(/[^\d,]/g, '');
+	const [wholePart, ...fractionParts] = cleaned.split(',');
+
+	if (wholePart === '') {
+		return '';
+	}
+
+	const fraction = fractionParts.join('').slice(0, 2);
+	const withComma =
+		fractionParts.length > 0 ? `${wholePart},${fraction}` : wholePart;
+
+	return withComma.slice(0, maxLength);
+};
+
 function App() {
 	const [amount, setAmount] = useState('500000');
 	const [years, setYears] = useState('25');
@@ -38,7 +56,10 @@ function App() {
 						rows: schedule(
 							loan,
 							Object.fromEntries(
-								Object.entries(extras).map(([k, v]) => [k, parseNumber(v)]),
+								Object.entries(extras).map(([monthKey, extraValue]) => [
+									monthKey,
+									parseNumber(extraValue),
+								]),
 							),
 						),
 						baseline: schedule(loan),
@@ -52,8 +73,10 @@ function App() {
 	const saving = total(baseline, 'interest') - interest;
 
 	const invalidExtras = Object.entries(extras).some(
-		([m, v]) =>
-			Number(m) <= rows.length && v !== '' && !Number.isFinite(parseNumber(v)),
+		([monthKey, extraValue]) =>
+			Number(monthKey) <= rows.length &&
+			extraValue !== '' &&
+			!Number.isFinite(parseNumber(extraValue)),
 	);
 
 	return (
@@ -98,9 +121,10 @@ function App() {
 							<div className={'input-wrap ' + (errors.amount ? 'error' : '')}>
 								<input
 									aria-invalid={errors.amount}
-									inputMode="decimal"
+									inputMode="numeric"
+									maxLength={9}
 									value={amount}
-									onChange={(e) => setAmount(e.target.value)}
+									onChange={(e) => setAmount(sanitizeDigits(e.target.value, 9))}
 									aria-label="Kwota kredytu"
 								/>
 								<span>PLN</span>
@@ -118,8 +142,9 @@ function App() {
 								<input
 									aria-invalid={errors.years}
 									inputMode="numeric"
+									maxLength={2}
 									value={years}
-									onChange={(e) => setYears(e.target.value)}
+									onChange={(e) => setYears(sanitizeDigits(e.target.value, 2))}
 									aria-label="Okres spłaty w latach"
 								/>
 								<span>lat</span>
@@ -137,8 +162,9 @@ function App() {
 								<input
 									aria-invalid={errors.rate}
 									inputMode="decimal"
+									maxLength={6}
 									value={rate}
-									onChange={(e) => setRate(e.target.value)}
+									onChange={(e) => setRate(sanitizeRate(e.target.value, 6))}
 									aria-label="Oprocentowanie roczne"
 								/>
 								<span>%</span>
@@ -222,8 +248,7 @@ function App() {
 							{invalidExtras && (
 								<p role="alert" className="alert">
 									Popraw oznaczone nadpłaty. Do tego czasu są liczone jako 0 zł.
-									Wpisuj kwoty nieujemne, maksymalnie z dwoma miejscami po
-									przecinku.
+									Wpisuj tylko cyfry.
 								</p>
 							)}
 
@@ -276,13 +301,14 @@ function App() {
 															aria-label={`Nadpłata: rok ${year}, miesiąc ${month}`}
 															aria-invalid={bad}
 															className={bad ? 'bad' : ''}
-															inputMode="decimal"
-															placeholder="0,00"
+																				inputMode="numeric"
+																				maxLength={9}
+																				placeholder="0"
 															value={extras[row.month] ?? ''}
 															onChange={(e) =>
 																setExtras((prev) => ({
 																	...prev,
-																	[row.month]: e.target.value,
+																						[row.month]: sanitizeDigits(e.target.value, 9),
 																}))
 															}
 														/>
