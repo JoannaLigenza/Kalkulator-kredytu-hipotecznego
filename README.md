@@ -1,44 +1,62 @@
-# Hipoteka — kalkulator kredytu i nadpłat
+# Hipoteka - Mortgage and Early Repayment Calculator
 
-Aplikacja React + TypeScript + Vite.
+A React + TypeScript + Vite application for simulating a mortgage repayment schedule, including optional monthly overpayments.
 
-## Uruchomienie lokalne
+The calculator interface on the frontend is presented in Polish, so labels, helper text, and messages are localized for Polish-speaking users.
 
-Wymagania: Node.js 22.18 lub nowszy oraz npm.
-Rozpakuj ZIP, otwórz terminal w katalogu hipoteka i wykonaj:
+## Local Setup
+
+Requirements: Node.js 22.18 or newer, and npm.
+
+Unpack the ZIP, open a terminal in the project directory, and run:
 
 ```sh
 npm ci
 npm run dev
 ```
 
-Otwórz w przeglądarce adres pokazany w terminalu.
-Instalacja zależności wymaga internetu.
+Then open the URL shown in the terminal in your browser.
 
-## Testy obliczeń
+Note: installing dependencies requires an internet connection.
+
+## Calculation Tests
 
 ```sh
 npm test
 ```
 
-## Wersja do publikacji
+## Production Build
 
 ```sh
 npm run build
 ```
 
-Gotowa strona powstanie w katalogu dist. Można ją umieścić na hostingu stron statycznych.
+If the build completes successfully, Vite creates a dist directory in the project root with production-ready static files that can be deployed to any static hosting service.
 
-## Pliki
+## Key Files
 
-- src/loan.ts — obliczenia harmonogramu w groszach
-- src/loan.test.ts — testy obliczeń
-- src/main.tsx — formularz, podsumowanie i tabela
-- src/style.css — wygląd i układ responsywny
+- src/loan.ts - amortization logic (calculated in grosz, i.e. integer cents)
+- src/loan.test.ts - calculation tests
+- src/main.tsx - form, summary cards, and repayment table
+- src/style.css - visual styling and responsive layout
 
-## Założenia
+## Assumptions
 
-Stała roczna stopa procentowa, miesięczne odsetki = kapitał × stopa roczna / 12.
-Nadpłata następuje po racie i obniża kolejne raty przy zachowaniu terminu.
-Całkowita spłata kończy harmonogram. Kwoty zaokrąglane do groszy.
-Bez prowizji, ubezpieczeń i dodatkowych opłat. Dane nie są utrwalane po odświeżeniu strony.
+- Fixed annual interest rate.
+- Monthly interest is calculated as: principal x annual rate / 12.
+- Overpayments are applied after the monthly installment and reduce future installments while keeping the original term.
+- Full payoff ends the schedule early.
+- Amounts are rounded to grosz.
+- No commissions, insurance, or additional bank fees are included.
+- Entered data is not persisted after a page refresh.
+
+## Disclaimer
+
+- This calculator is intended for personal use only.
+- The results are estimates and are not guaranteed.
+- Each bank may use slightly different formulas, rounding rules, and repayment policies, so official bank schedules can differ from this simulation.
+- This calculator does not include commission costs or other bank charges.
+
+## AI Disclosure
+
+This project was developed with the assistance of Artificial Intelligence (AI). AI tools were used to support code generation, implementation, and documentation.
